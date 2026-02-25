@@ -6,7 +6,7 @@ import sys
 from typing import Dict, List, Optional, Union, Any
 
 from dotenv import load_dotenv
-from pydantic import BaseModel, validator  # pylint: disable=no-name-in-module
+from pydantic import BaseModel, BaseSettings, validator  # pylint: disable=no-name-in-module
 from pymongo import MongoClient
 from telethon import TelegramClient
 from telethon.sessions import StringSession
@@ -60,7 +60,7 @@ class PastSettings(BaseModel):
         return val
 
 
-class LoginConfig(BaseModel):
+class LoginConfig(BaseSettings):
 
     API_ID: int = 0
     API_HASH: str = ""
