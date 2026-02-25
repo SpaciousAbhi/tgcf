@@ -3,9 +3,6 @@ telegram:
   api_hash: 9dba979fbbb2152772a21f66f11116a4
   session_string: 1BVtsOKEBuysIywN-E0ZMNHTuTGON1ovhruIS1SLq5HVh2meJrJSBJ3Z6e4SQRNZcw9bk-M7uMJzGBDTZwb0pqqklqK3d749ulDKRnx2oBbNvnjQP-Axi0GBeebF6hYnUgysxdQiGdQQZeQP21DkurzjUljvOl0AInh5PhIqQ3HFdaC_hU7kXcjWkEBhSMYCxnVtey1imLntO0sHNxWRZQZqX2PU0RDaJVVYCNfv-qT5PdFumMOyrcSsArLbf7mKtYS6oSuXL8AZZoKT1F3NmGCMSLJ_Y2_mk5_Lphqylm1eui5LgRbJhFAvzJrJQWpey8PqvBWR_lFO7oGlcARejerFC9MT4BuA=
 
-web:
-  password: strongpassword123
-
 forward:
   - from: "@deals_rush_offerz"
     to: "@ekconverter14bot"
