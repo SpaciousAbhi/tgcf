@@ -1,1 +1,1 @@
-worker: python -m tgcf
+worker: tgcf
