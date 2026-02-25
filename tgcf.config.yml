@@ -1,0 +1,3 @@
+forward:
+  - from: "@deals_rush_offerz"
+    to: "@ekconverter14bot"
