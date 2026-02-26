@@ -98,6 +98,18 @@ Make sure you are on a supported environment and have python:3.10 or above, inst
   - You can save your password in any password manager (may be of browser)
     to autofill password everytime.
 
+### Configuration via Environment Variables
+
+You can also configure the login credentials via environment variables. This is useful for deployments like Heroku or Docker.
+The following environment variables are supported:
+
+- `API_ID`
+- `API_HASH`
+- `BOT_TOKEN`
+- `SESSION_STRING`
+- `PHONE_NO`
+- `USERNAME`
+
 - Start the web-server.
 
   ```shell
