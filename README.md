@@ -110,6 +110,23 @@ The following environment variables are supported:
 - `PHONE_NO`
 - `USERNAME`
 
+To configure forwards and other settings, you can pass the entire config as a JSON string in the `TGCF_CONFIG` environment variable.
+
+```json
+{
+  "forwards": [
+    {
+      "source": 12345,
+      "dest": [67890]
+    }
+  ],
+  "login": {
+    "API_ID": 123,
+    "API_HASH": "abc"
+  }
+}
+```
+
 - Start the web-server.
 
   ```shell

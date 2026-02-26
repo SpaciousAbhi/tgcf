@@ -12,7 +12,7 @@ from telethon import TelegramClient
 from telethon.sessions import StringSession
 
 from tgcf import storage as stg
-from tgcf.const import CONFIG_FILE_NAME
+from tgcf.const import CONFIG_ENV_VAR_NAME, CONFIG_FILE_NAME
 from tgcf.plugin_models import PluginConfig
 
 pwd = os.getcwd()
@@ -106,6 +106,9 @@ def detect_config_type() -> int:
             client = MongoClient(MONGO_CON_STR)
             stg.mycol = setup_mongo(client)
         return 2
+    if os.getenv(CONFIG_ENV_VAR_NAME):
+        logging.info(f"{CONFIG_ENV_VAR_NAME} detected!")
+        return 3
     if CONFIG_FILE_NAME in os.listdir():
         logging.info(f"{CONFIG_FILE_NAME} detected!")
         return 1
@@ -133,6 +136,8 @@ def read_config(count=1) -> Config:
                 return Config.parse_raw(file.read())
         elif stg.CONFIG_TYPE == 2:
             return read_db()
+        elif stg.CONFIG_TYPE == 3:
+            return Config.parse_raw(os.getenv(CONFIG_ENV_VAR_NAME))
         else:
             return Config()
     except Exception as err:
