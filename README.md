@@ -98,6 +98,35 @@ Make sure you are on a supported environment and have python:3.10 or above, inst
   - You can save your password in any password manager (may be of browser)
     to autofill password everytime.
 
+### Configuration via Environment Variables
+
+You can also configure the login credentials via environment variables. This is useful for deployments like Heroku or Docker.
+The following environment variables are supported:
+
+- `API_ID`
+- `API_HASH`
+- `BOT_TOKEN`
+- `SESSION_STRING`
+- `PHONE_NO`
+- `USERNAME`
+
+To configure forwards and other settings, you can pass the entire config as a JSON string in the `TGCF_CONFIG` environment variable.
+
+```json
+{
+  "forwards": [
+    {
+      "source": 12345,
+      "dest": [67890]
+    }
+  ],
+  "login": {
+    "API_ID": 123,
+    "API_HASH": "abc"
+  }
+}
+```
+
 - Start the web-server.
 
   ```shell

@@ -3,17 +3,20 @@
 import logging
 import os
 import sys
+import yaml
 from typing import Dict, List, Optional, Union, Any
 
 from dotenv import load_dotenv
-from pydantic import BaseModel, validator  # pylint: disable=no-name-in-module
+from pydantic import BaseModel, BaseSettings, validator  # pylint: disable=no-name-in-module
 from pymongo import MongoClient
 from telethon import TelegramClient
 from telethon.sessions import StringSession
 
 from tgcf import storage as stg
-from tgcf.const import CONFIG_FILE_NAME
+from tgcf.const import CONFIG_ENV_VAR_NAME, CONFIG_FILE_NAME
 from tgcf.plugin_models import PluginConfig
+
+CONFIG_YAML_FILE_NAME = "tgcf.config.yml"
 
 pwd = os.getcwd()
 env_file = os.path.join(pwd, ".env")
@@ -60,7 +63,7 @@ class PastSettings(BaseModel):
         return val
 
 
-class LoginConfig(BaseModel):
+class LoginConfig(BaseSettings):
 
     API_ID: int = 0
     API_HASH: str = ""
@@ -106,9 +109,15 @@ def detect_config_type() -> int:
             client = MongoClient(MONGO_CON_STR)
             stg.mycol = setup_mongo(client)
         return 2
+    if os.getenv(CONFIG_ENV_VAR_NAME):
+        logging.info(f"{CONFIG_ENV_VAR_NAME} detected!")
+        return 3
     if CONFIG_FILE_NAME in os.listdir():
         logging.info(f"{CONFIG_FILE_NAME} detected!")
         return 1
+    if CONFIG_YAML_FILE_NAME in os.listdir():
+        logging.info(f"{CONFIG_YAML_FILE_NAME} detected!")
+        return 4
 
     else:
         logging.info(
@@ -133,6 +142,11 @@ def read_config(count=1) -> Config:
                 return Config.parse_raw(file.read())
         elif stg.CONFIG_TYPE == 2:
             return read_db()
+        elif stg.CONFIG_TYPE == 3:
+            return Config.parse_raw(os.getenv(CONFIG_ENV_VAR_NAME))
+        elif stg.CONFIG_TYPE == 4:
+            with open(CONFIG_YAML_FILE_NAME, encoding="utf8") as file:
+                return Config.parse_obj(yaml.safe_load(file.read()))
         else:
             return Config()
     except Exception as err:
@@ -234,6 +248,22 @@ ADMINS = []
 MONGO_CON_STR = os.getenv("MONGO_CON_STR")
 MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "tgcf-config")
 MONGO_COL_NAME = os.getenv("MONGO_COL_NAME", "tgcf-instance-0")
+
+logging.info(f"Checking for config sources...")
+if os.getenv(CONFIG_ENV_VAR_NAME):
+    logging.info(f"Environment variable {CONFIG_ENV_VAR_NAME} is SET.")
+else:
+    logging.info(f"Environment variable {CONFIG_ENV_VAR_NAME} is NOT SET.")
+
+if os.path.exists(CONFIG_FILE_NAME):
+    logging.info(f"File {CONFIG_FILE_NAME} EXISTS.")
+else:
+    logging.info(f"File {CONFIG_FILE_NAME} DOES NOT EXIST.")
+
+if os.path.exists(CONFIG_YAML_FILE_NAME):
+    logging.info(f"File {CONFIG_YAML_FILE_NAME} EXISTS.")
+else:
+    logging.info(f"File {CONFIG_YAML_FILE_NAME} DOES NOT EXIST.")
 
 stg.CONFIG_TYPE = detect_config_type()
 CONFIG = read_config()
